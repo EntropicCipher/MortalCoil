@@ -1,0 +1,365 @@
+
+--SOLUTION BY PARTS
+
+Find regions with 1 entrance an 1 exit using partitions 
+solve all possible solutions for those regions
+link regions together, head to tail depending on the solvability of the region
+once all regions are linked, the puzzle is solved *HAH I WISH*
+
+Concept is based on the fact that once the player enters a region with only 2 or 3 openings, 
+the region must be solved before leaving in order to prevent dead ends or terminations.
+
+
+RegionGraph will contain the current state of the map, and the move stacks will contain all information needed to backtrack
+
+Problem: Sometimes direct solutions are not correct, and require the creation of a dead end
+Solution: find solutions that either terminate or create dead ends?
+
+
+	//public ArrayList<LinkedList<PartialSolution>> solutionEntrances;
+	//public ArrayList<LinkedList<PartialSolution>> solutionExits;
+	/*public ArrayList<PartialSolution> partialSolve(){
+		
+		
+		solutionEntrances = new ArrayList<LinkedList<PartialSolution>>(width*height); 
+		solutionExits = new ArrayList<LinkedList<PartialSolution>>(width*height);
+		for(int i = 0; i<width*height; i++)solutionEntrances.add(null);//Initialize arrays
+		for(int i = 0; i<width*height; i++)solutionExits.add(null);
+		
+		
+		ArrayList<PartialSolution> solutions = new ArrayList<PartialSolution>();
+		for(Region r: regions)if(r.exits.length <= 3){
+			//solutions.addAll(PartialSolver.solveRegion(r));
+		}
+		return null;
+		
+		/*for(PartialSolution ps: solutions){
+			LinkedList<PartialSolution> dentrance = solutionEntrances.get(ps.startPoint.y * width + ps.startPoint.x);
+			if(dentrance == null){
+				dentrance = new LinkedList<PartialSolution>();
+				solutionEntrances.set(ps.startPoint.y * width + ps.startPoint.x, dentrance);
+			}
+			dentrance.add(ps);
+			
+			LinkedList<PartialSolution> dexit = solutionExits.get(ps.endPoint.y * width + ps.endPoint.x); //Destination entrance/exit
+			if(dexit == null){
+				dexit = new LinkedList<PartialSolution>();
+				solutionExits.set(ps.endPoint.y * width + ps.endPoint.x, dexit);
+			}
+			dexit.add(ps);
+		}
+		int solcount = solutions.size();
+		for(int i = 0; i<solcount; i++){
+			
+			PartialSolution tsol = solutions.get(i);
+			
+			if(tsol.mark){
+				solutions.set(i, null);
+				continue;
+			}
+			
+			
+			Point current = tsol.endPoint.clone();
+			char dir = tsol.moves.charAt(tsol.moves.length()-1);
+			
+			LinkedList<PartialSolution> otherends = solutionExits.get(current.y*width + current.x);
+			int othersols = 0;
+			
+			if(otherends == null)continue;
+			for(PartialSolution pp: otherends)if(pp.moves.charAt(pp.moves.length()-1) == dir)othersols++;
+			
+			if(othersols != 1)continue;
+			
+			if(dir == 'U')current.y++;
+			else if(dir == 'D')current.y--;
+			else if(dir == 'R')current.x--;
+			else if(dir == 'L')current.x++;
+			
+			
+			
+			otherends = solutionEntrances.get(current.y*width + current.x);
+			othersols = 0;
+			if(otherends == null)continue;
+			
+			PartialSolution msol = null;
+			for(PartialSolution pp: otherends)if(pp.moves.charAt(0) == dir){
+				othersols++;
+				msol = pp;
+			}
+			if(othersols != 1)continue;
+			
+			if(tsol == msol){
+				solutions.set(i, null);
+				continue;
+			}
+			
+			
+			PartialSolution rsol = new PartialSolution();
+			
+			rsol.area = new ArrayList<Region>(); //Out of memory, infinite loop?
+			rsol.area.addAll(msol.area);
+			rsol.area.addAll(tsol.area);
+			
+			rsol.endPoint = msol.endPoint;
+			rsol.startPoint = tsol.startPoint;
+			rsol.moves = tsol.moves + msol.moves.substring(1);
+			
+			solutionEntrances.get(tsol.startPoint.y * width + tsol.startPoint.x).remove(tsol);
+			solutionExits.get(tsol.endPoint.y * width + tsol.endPoint.x).remove(tsol);
+			solutions.set(i, null);
+			
+			solutionEntrances.get(msol.startPoint.y * width + msol.startPoint.x).remove(msol);
+			solutionExits.get(msol.endPoint.y * width + msol.endPoint.x).remove(msol);
+			msol.mark = true;
+				
+			solutionEntrances.get(rsol.startPoint.y * width + rsol.startPoint.x).add(rsol);
+			solutionExits.get(rsol.endPoint.y * width + rsol.endPoint.x).add(rsol);
+			solcount++;
+			solutions.add(rsol);
+			
+			
+		}
+		
+		ArrayList<PartialSolution> result = new ArrayList<PartialSolution>();
+		for(PartialSolution ps: solutions){
+			if(ps!=null && !ps.mark && ps.moves.length() > 2){
+				result.add(ps);
+				ps.mark = false;
+			}
+		}
+		for(Region r: regions)r.mark = false;
+		return result;
+		
+		
+		
+	}*/
+	
+
+
+/*public boolean divisionCheck(){
+		ArrayList<Partition> marked = new ArrayList<Partition>();
+		marked.add(partitions.iterator().next());
+		marked.get(0).mark = true;
+		
+		for(int i = 0; i<marked.size(); i++){
+			Partition tp = marked.get(i);
+			
+			for(Partition pp : tp.edges)
+			if(pp!=null && !pp.mark){
+				marked.add(pp);
+				pp.mark = true;
+			}
+		}
+		
+		for(Partition p:marked)p.mark = false;
+		
+		return marked.size() != partitions.size();
+	}*/
+
+
+
+/*for(int ii = 0; ii<regions.size(); ii++){ //Why did I add this? 
+			Region r = regions.get(ii);
+			
+			if(r == null || r.exits.length != 2 || r.mark)continue;
+			
+			
+			ArrayList<Region> marked = new ArrayList<Region>();
+			marked.add(r);
+			r.mark = true;
+			
+			
+			Region end1 = null;
+			Region end2 = null;
+			
+			int checkindex = 0;
+			
+			while(checkindex<marked.size()){
+				
+				Region check = marked.get(checkindex);
+				
+				for(Point p: check.exits){
+					Region rr = regionCoverage[p.x][p.y];
+					if(rr.exits.length == 2 && !rr.mark){
+						marked.add(rr);
+						rr.mark = true;
+						regions.set(regions.indexOf(rr), null);
+					}
+					else if(!rr.mark){
+						if(end1 == null)end1 = check;
+						else end2 = check;
+					}
+					
+				}
+				
+				checkindex++;
+			}
+			
+			if(marked.size() == 1){
+				continue;
+			}
+			
+			regions.set(regions.indexOf(r), null);
+			
+			Region newreg = new Region();
+			int parts = 0;
+			for(Region rr: marked)parts+=rr.area.length;
+			
+			newreg.area = new Partition[parts];
+			newreg.mark = true;
+			newreg.exits = new Point[2];
+			newreg.exitOrientations = new char[2];
+			
+			for(int i = 0; i<2; i++){
+				Point p = end1.exits[i]; 
+				if(!regionCoverage[p.x][p.y].mark){
+					newreg.exits[0] = end1.exits[i];
+					newreg.exitOrientations[0] = end1.exitOrientations[i];
+				}
+			}
+			for(int i = 0; i<2; i++){
+				Point p = end2.exits[i]; 
+				if(!regionCoverage[p.x][p.y].mark){
+					newreg.exits[1] = end2.exits[i];
+					newreg.exitOrientations[1] = end2.exitOrientations[i];
+				}
+			}
+			
+			int fill = 0;
+			for(Region rr: marked){
+				for(int i = 0; i<rr.area.length; i++){
+					newreg.area[i+fill] = rr.area[i];
+				}
+				fill+=rr.area.length;
+			}
+			
+			for(Partition p : newreg.area){
+				for(int x = p.x; x<p.x+p.w; x++)
+					for(int y = p.y; y<p.y+p.h; y++)regionCoverage[x][y] = newreg;
+			}
+			
+			regions.add(newreg);
+			
+		}*/
+		
+		for(Partition p: partitions){ //link partitions together
+			p.edges = new Partition[p.w*2 + p.h*2]; //Initialize
+			
+			for(int x = 0; x<p.w; x++){  //iterate over top and bottom edges
+				if(p.y > 0)p.edges[x] = pcoverage[p.x+x][p.y-1];
+				if(p.y+p.h < height)p.edges[p.w+p.h+x] = pcoverage[p.x+p.w-1-x][p.y+p.h];
+			}
+			for(int y = 0; y<p.h; y++){ //left and right edges
+				if(p.x+p.w < width)p.edges[p.w+y] = pcoverage[p.x+p.w][p.y+y];
+				if(p.x > 0)p.edges[(2*p.w)+p.h+y] = pcoverage[p.x-1][p.y+p.h-1-y];
+			}
+			
+		}
+		
+		
+		int currentcheck = 0;
+		ArrayList<Partition> marked = new ArrayList<Partition>();
+		marked.add(part);
+		part.mark = true;
+
+		while(currentcheck<marked.size()){
+			Partition cpart = marked.get(currentcheck);
+			
+			for(int i = 0; i<cpart.w; i++){
+				Partition thisEdge = cpart.edges[i];
+				if(thisEdge == null || thisEdge.mark)continue;
+				if(
+						(i>0 && cpart.edges[i-1] != null) || 
+						(i<cpart.w-1 && cpart.edges[i+1] != null) ||
+						(i == 0 && (cpart.edges[2*cpart.w+2*cpart.h-1] != null) && !l.getTile(cpart.x-1,cpart.y-1)) ||
+						(i == cpart.w-1 && (cpart.edges[cpart.w] != null) && !l.getTile(cpart.x+cpart.w, cpart.y-1))
+				){
+					marked.add(thisEdge);
+					thisEdge.mark = true;
+				}
+				
+			}
+			for(int i = cpart.w; i<cpart.w+cpart.h; i++){
+				Partition thisEdge = cpart.edges[i];
+				if(thisEdge == null || thisEdge.mark)continue;
+				if(
+						(i>cpart.w && cpart.edges[i-1] != null) || 
+						(i<cpart.w+cpart.h-1 && cpart.edges[i+1] != null) ||
+						(i == cpart.w && (cpart.edges[cpart.w-1] != null) && !l.getTile(cpart.x+cpart.w,cpart.y-1)) || 
+						(i == cpart.w+cpart.h-1 && (cpart.edges[cpart.w + cpart.h] != null) && !l.getTile(cpart.x+cpart.w,cpart.y+cpart.h))
+				){
+					marked.add(thisEdge);
+					thisEdge.mark = true;
+				}
+			}
+			for(int i = cpart.w+cpart.h; i<2*cpart.w+cpart.h; i++){
+				Partition thisEdge = cpart.edges[i];
+				if(thisEdge == null || thisEdge.mark)continue;
+				if(
+						(i>cpart.w+cpart.h && cpart.edges[i-1] != null) || 
+						(i<2*cpart.w+cpart.h-1 && cpart.edges[i+1] != null) ||
+						(i == cpart.w+cpart.h && (cpart.edges[cpart.w+cpart.h-1] != null) && !l.getTile(cpart.x+cpart.w,cpart.y+cpart.h)) ||
+						(i == 2*cpart.w+cpart.h-1 && (cpart.edges[2*cpart.w + cpart.h] != null) && !l.getTile(cpart.x-1,cpart.y+cpart.h))
+				){
+					marked.add(thisEdge);
+					thisEdge.mark = true;
+				}
+			}
+			for(int i = 2*cpart.w+cpart.h; i<2*cpart.w+2*cpart.h; i++){
+				Partition thisEdge = cpart.edges[i];
+				if(thisEdge == null || thisEdge.mark)continue;
+				if(
+						(i>2*cpart.w+cpart.h && cpart.edges[i-1] != null) || 
+						(i<2*cpart.w+2*cpart.h-1 && cpart.edges[i+1] != null) ||
+						(i == 2*cpart.w + cpart.h && (cpart.edges[2*cpart.w + cpart.h - 1] != null) && !l.getTile(cpart.x-1,cpart.y+cpart.h)) ||
+						(i == 2*cpart.w+2*cpart.h-1 && (cpart.edges[0] != null) && !l.getTile(cpart.x-1,cpart.y-1))
+				){
+					marked.add(thisEdge);
+					thisEdge.mark = true;
+				}
+			}
+			currentcheck++;
+		}
+		
+		Region r = new Region();
+		r.area = new Partition[marked.size()];
+		
+		ArrayList<Point> exits = new ArrayList<Point>();
+		ArrayList<Character> edirs = new ArrayList<Character>();
+		
+		for(int ii = 0; ii<marked.size(); ii++){
+			Partition cpart = marked.get(ii);
+			r.area[ii] = cpart;
+			for(int i = 0; i<cpart.w; i++){
+				if(cpart.edges[i] == null || cpart.edges[i].mark)continue;
+				exits.add(new Point(cpart.x+i, cpart.y-1));
+				edirs.add('D');
+			}
+			for(int i = cpart.w; i<cpart.w+cpart.h; i++){
+				if(cpart.edges[i] == null || cpart.edges[i].mark)continue;
+				exits.add(new Point(cpart.x + cpart.w, cpart.y + i-cpart.w));
+				edirs.add('L');
+			}
+			for(int i = cpart.w+cpart.h; i<2*cpart.w+cpart.h; i++){
+				if(cpart.edges[i] == null || cpart.edges[i].mark)continue;
+				exits.add(new Point(cpart.x+cpart.w-1 - (i-cpart.w-cpart.h), cpart.y + cpart.h));
+				edirs.add('U');
+			}
+			for(int i = 2*cpart.w+cpart.h; i<2*cpart.w+2*cpart.h; i++){
+				if(cpart.edges[i] == null || cpart.edges[i].mark)continue;
+				exits.add(new Point(cpart.x-1, cpart.y+cpart.h-1 - (i- (2*cpart.w+cpart.h) )));
+				edirs.add('R');
+			}
+		}
+		
+		r.exits = new Point[exits.size()];
+		for(int i = 0; i<exits.size(); i++)r.exits[i] = exits.get(i);
+		
+		r.exitOrientations = new char[edirs.size()];
+		for(int i = 0; i<edirs.size(); i++)r.exitOrientations[i] = edirs.get(i);
+		
+		for(Partition p:marked)p.mark = false;
+		
+		
+		
+		return r;

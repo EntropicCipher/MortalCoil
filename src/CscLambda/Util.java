@@ -2,7 +2,8 @@ package CscLambda;
 
 
 
-public class Util {
+public class Util { //Classes that pertain to all kinds of MortalCoil solvers
+	
 	public static class Solution{
 		Point start = new Point();
 		String path;

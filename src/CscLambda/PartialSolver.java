@@ -8,7 +8,11 @@ import CscLambda.RegionGraph.Partition;
 import CscLambda.RegionGraph.Region;
 import CscLambda.Util.Point;
 
-public class PartialSolver {
+public class PartialSolver { 
+	//Generates all possible solutions to each region, then returns them to the RegionGraphSolver 
+	//where dead ends and conflicting paths will be removed and the remaining solutions will be weaved together
+	
+	//This file is currently broken, as the new "PartialLevelState" object is being implemented TODO
 	
 	public static ArrayList<PartialSolution> solveRegion(Region r, RegionGraph g){ 
 		
@@ -27,7 +31,7 @@ public class PartialSolver {
 			ArrayList<PartialMove> movestack = new ArrayList<PartialMove>();
 			
 			PartialMove firstmove = new PartialMove();
-			firstmove.state = l.clone();
+			firstmove.state = l.state.clone();
 			firstmove.state.tiles[start.x - l.x][start.y - l.y] = true;
 			firstmove.position = new Point(start.x - l.x, start.y - l.y);
 			
@@ -102,7 +106,7 @@ public class PartialSolver {
 	
 	static PartialMove simulateMove(PartialMove previous, char direction){
 		
-		PartialLevel result = previous.state.clone(); //Break references to the previous state
+		PartialLevelState result = previous.state.clone(); //Break references to the previous state
 		
 		int x = previous.position.x;
 		int y = previous.position.y;
@@ -276,7 +280,7 @@ public class PartialSolver {
 			return pp;
 		}
 		
-		public boolean isSolved(){ //Free space is 0, exits are 1, blocked is 2,  paths are >=3 
+		public boolean isSolved(){ //Free space is 0, exits are 1, blocked tiles are 2,  paths are >=3 
 			for(int x = 0; x<level.width; x++)for(int y = 0; y<level.height; y++)
 				if(tiles[x][y] == 0)return false;
 			return true;
@@ -293,6 +297,7 @@ public class PartialSolver {
 				System.out.println();
 			}
 		}
+		
 		
 	}
 	

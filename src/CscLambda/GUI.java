@@ -14,7 +14,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferStrategy;
-import java.util.ArrayList;
+
 
 import CscLambda.RegionGraph.Partition;
 import CscLambda.RegionGraph.Region;
@@ -22,7 +22,7 @@ import CscLambda.Level;
 import CscLambda.Util.Point;
 import CscLambda.Util.Solution;
 
-public class GUI {
+public class GUI { //Simple, hacked-together GUI to visualize pieces of the RegionGraph solution process
 	
 	Frame frame;
 	BufferStrategy buffer;
@@ -122,7 +122,9 @@ public class GUI {
 			public void focusGained(FocusEvent arg0) {
 				update();
 			}
-			public void focusLost(FocusEvent e) {}
+			public void focusLost(FocusEvent e) {
+				update();
+			}
 			
 		});
 		
@@ -140,7 +142,7 @@ public class GUI {
 	
 	
 	
-	public void update(){
+	public void update(){ //Re-renders the GUI
 		int tiledim = (int) Math.floor(Math.min(WIDTH/level.width, HEIGHT/level.height)); //Draw map
 		Graphics g = buffer.getDrawGraphics();
 		g.translate(XOS, YOS);
@@ -252,38 +254,6 @@ public class GUI {
 			g.setColor(new Color(0f,0.5f,0.5f,0.2f));
 			g.fillRect(p.x*tiledim, p.y*tiledim, tiledim*p.w, tiledim*p.h);
 		}
-		
-			
-		
-	
-		
-
-		/*
-		int xx = rnum%pg.width;
-		int yy = Math.floorDiv(rnum, pg.width);
-		
-		Region r = pg.regionCoverage[xx][yy];
-		if(r!=null)for(Partition p: r.area){
-			g.setColor(new Color(0f,0.5f,0.5f,0.5f));
-			g.fillRect(p.x*tiledim, p.y*tiledim, tiledim*p.w, tiledim*p.h);
-		}
-		
-		
-		
-		
-		if(r!=null)g.setColor(new Color(0f,1f,0f,0.5f));
-		else g.setColor(new Color(1f,0f,0f,0.5f));
-		g.fillRect(xx*tiledim, yy*tiledim, tiledim, tiledim);
-		*/
-			
-
-
-	
-		/*LinkedList<PartialSolution> psl = pg.solutionEntrances.get(rnum);
-		if(psl != null && !psl.isEmpty()){
-			Partition[] pl = psl.getFirst().area;
-			
-		}*/
 			
 		
 		buffer.show();
@@ -300,9 +270,6 @@ public class GUI {
 		
 		moves.append(d);
 	}
-	
-	
-	
 	
 	public void destroy(){
 		frame.dispose();

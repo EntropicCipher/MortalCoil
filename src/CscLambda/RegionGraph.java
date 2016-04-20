@@ -2,7 +2,6 @@ package CscLambda;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
 
 import CscLambda.Level;
 //import CscLambda.PartialSolver.PartialSolution;
@@ -17,12 +16,12 @@ public class RegionGraph{
 	public boolean[][] levelTileGrid;
 	
 	public Partition[][] partitionCoverage;
-	public HashSet<Partition> partitions = new HashSet<Partition>(); //Possible source of undefined regioning/solution
+	public HashSet<Partition> partitions = new HashSet<Partition>(); 
 	
 	public Region[][] regionCoverage;
-	public HashSet<Region> regions = new HashSet<Region>(); //Possible source of undefined regioning/solution
+	public HashSet<Region> regions = new HashSet<Region>(); 
 	
- 	public RegionGraph(Level l){
+ 	public RegionGraph(Level l){ //Divides the level up into rectangular "Partitions", then joins those together create "Regions
 		int[][] grid = new int[l.width][l.height];
 		width = l.width;
 		height = l.height;
@@ -182,7 +181,6 @@ public class RegionGraph{
 		}
 		
 		//stitch
-	
 		
 		HashSet<Region> result = new HashSet<Region>(regions.size());
 		for(Region r: regions)if(r!=null){
@@ -192,6 +190,10 @@ public class RegionGraph{
 		regions = result;
 	}
 	public Region findRegion(RegionGraph l, Partition part){ //Floods to find the region that contains the partition
+		
+		//This was separated into its own function in order to allow for finding of individual regions by the RegionGraphSolver
+		//But plans have changed, so this will be merged into the constructor. TODO
+		
 		int currentcheck = 0;
 		ArrayList<Partition> marked = new ArrayList<Partition>();
 		marked.add(part);
@@ -356,7 +358,7 @@ public class RegionGraph{
 	}
 	
 
-	public boolean divisionCheck(){
+	public boolean divisionCheck(){ //Flood fills from a piece of the map to find inaccessible parts using the region graph
 		ArrayList<Region> marked = new ArrayList<Region>();
 		marked.add(regions.iterator().next());
 		marked.get(0).mark = true;
@@ -378,17 +380,16 @@ public class RegionGraph{
 		return marked.size() != regions.size();
 	}
 	
- 	public static class Partition{
+ 	public static class Partition{ //A rectangular chunk of free space
 		int x, y, w, h;
 		boolean mark = false;
 		boolean regionmark = false;
 		Region parentRegion;
 	
 	}
-	public static class Region{
+	public static class Region{ //A collection of partitions where each orfice is only 1 unit wide
 		Partition[] area;
 		//HashSet<PartialSolution> solutions;
-		
 		boolean mark;
 		
 		Point[] exits;

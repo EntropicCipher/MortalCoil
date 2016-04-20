@@ -8,7 +8,7 @@ import CscLambda.RegionGraph.Region;
 import CscLambda.Util.Point;
 import CscLambda.Util.Solution;
 
-public class RegionGraphSolver {
+public class RegionGraphSolver { //Module responsible for solving the RegionGraph and returning a solution
 	
 	int rootdirections = 0;
 	
@@ -33,7 +33,7 @@ public class RegionGraphSolver {
 	
 	
 	
-	static MoveFrame simulateMove(RegionGraph rg, Point startpos, char direction){
+	static MoveFrame simulateMove(RegionGraph rg, Point startpos, char direction){ //Edits the regiongraph to simulate a movement
 		ArrayList<Point> thispath = new ArrayList<Point>();
 		StringBuilder moves = new StringBuilder();
 		MoveFrame newFrame = new MoveFrame();
@@ -169,9 +169,11 @@ public class RegionGraphSolver {
 		return newFrame;
 	}	
 
+	
+	
 	//TODO: reverse move simulation
 	
-	public static class MoveFrame{
+	public static class MoveFrame{ //Stores information about a logged move, conserves memory when reverting moves
 		Point[] path; //contains final point, not initial 
 		String moves;
 		
@@ -187,12 +189,11 @@ public class RegionGraphSolver {
 		
 	}
 	
-	public static class GraphChange{
+	public static class GraphChange{//TODO: Use this?
 		Partition part;
 		boolean axis;
 		int olddim;
 		int oldpos;
-		
 		
 		public GraphChange(Partition pt, boolean a, int p, int d){
 			part = pt;

@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import CscLambda.Util.Point;
 import CscLambda.Util.Solution;
 
-public class TileSolver{
+public class TileSolver{ 
+	//Somewhat brute-force tile-by-tile search pattern. Uses multithreading. Gets to about level ~90 before it becomes impractical
 	
 	static final char[] directions = {'U', 'D', 'R', 'L' };
 	
@@ -52,7 +53,7 @@ public class TileSolver{
 	}
 
 	Solution solve(){
-		long starttime = System.currentTimeMillis();
+		long starttime = System.currentTimeMillis(); //Log solve time
 		ArrayList<Point> startpoints = getOrderedStartPoints(l);
 		
 		ArrayList<ArrayList<Point>> threadlists = new ArrayList<ArrayList<Point>>();
@@ -63,7 +64,7 @@ public class TileSolver{
 		SolverThread[] sthreads = new SolverThread[THREADS];
 		Thread[] tthreads = new Thread[THREADS];
 		
-		for(int i = 0; i<THREADS; i++){
+		for(int i = 0; i<THREADS; i++){ //Starts threads
 			sthreads[i] = new SolverThread(l, threadlists.get(i));
 			tthreads[i] = new Thread(sthreads[i]);
 			tthreads[i].start();
@@ -78,7 +79,7 @@ public class TileSolver{
 				e.printStackTrace();
 			}
 			boolean allaredead = true;
-			for(int i = 0; i<THREADS; i++){
+			for(int i = 0; i<THREADS; i++){ //Check threads to see if any have solved
 				boolean isdead = (!tthreads[i].isAlive());
 				if(!isdead)allaredead = false;
 				if(isdead && sthreads[i].s!=null){
@@ -86,11 +87,11 @@ public class TileSolver{
 					break;
 				}
 			}
-			if(allaredead)break;
-			if(s != null)for(SolverThread t: sthreads)t.running = false;
+			if(allaredead)break; //Breaks if all threads have finished
+			if(s != null)for(SolverThread t: sthreads)t.running = false; //Stops threads if one has found a solution
 		}
 		
-		for(Thread t: tthreads)
+		for(Thread t: tthreads) //Waits for all threads to die
 			try {
 				t.join();
 			} catch (InterruptedException e) {

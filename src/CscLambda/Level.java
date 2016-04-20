@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 import CscLambda.Util.Solution;
 
 
-public class Level implements Cloneable{
+public class Level implements Cloneable{ //Handles the retrieval and parsing of MortalCoil levels
 	
 	public int width;
 	public int height;

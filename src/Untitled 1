@@ -16,6 +16,9 @@ Problem: Sometimes direct solutions are not correct, and require the creation of
 Solution: find solutions that either terminate or create dead ends?
 
 
+
+The remainder of this file is excess bits of code that may be useful later
+
 	//public ArrayList<LinkedList<PartialSolution>> solutionEntrances;
 	//public ArrayList<LinkedList<PartialSolution>> solutionExits;
 	/*public ArrayList<PartialSolution> partialSolve(){
